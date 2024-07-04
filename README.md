@@ -14,13 +14,14 @@ The long-term network learns using the spike-time dependent plasticity learning 
 
 # Usage
 
-1. snnmnist-supervised.ipynb implements the learning of the long-term network and the three experiments described above using the Brian2 library in Python
+1. snnmnist-supervised.ipynb implements the learning of the long-term network and the three experiments described above using the `Brian2` library in Python
 2. The folder SPICEckts contains the LTSpice schematics for the crossbar-array based analog circuits that implement the above network design. Owing to circuit simulation time constraints, STDP learning is not done through analog circuitry and the weights are instead transferred from step 1. Weights are ideally stored on NVM devices like RRAM or Spintronics but for simplicity, in the schematics they are modelled as fixed value resistors since no learning happens at the circuit level. The three experiments can be simulated using the file recapitulation_crossbar_run.ipynb (Replace the .net file with the experiment you want to run: retention_crossbar.net, recapitulation_crossbar.net and interference_crossbar.net).
-3. Neuron activations of the working memory can be viewed as videos in the videos folder.
-4. Details on the experiment protocol and explanation of the circuit components can be found in the BTP2-Thesis.
+3. Neuron activations of the working memory for all experiments (both Brian2-algorithmic and circuit simulations) can be viewed as videos in the `WM_videos` folder.
+4. Details on the experiment protocol and explanation of the circuit components can be found in `BTP2-Thesis.pdf`.
 
 # Thesis and Remarks
 
-The report explaining the project in much greater detail can be found in BTP2-Thesis.pdf. Unfortunately, it is unlikely this work will get published in its current state due to a lack of rigorous literature review on the exact behaviour of working memory. For example, the role of attentional mechanisms in WM are not addressed in the current model. It is unlikely that a model, however interesting it may be, attempting to explain three (relatively old) psychological phenomena, while ignoring the rest of the work done on the cognitive modeling side currently in literature. There are multiple avenues for future work: 1. Complete circuit simulation of the current model including learning of NVM synapses (attractive from a neuromorphic perspective)
+The report explaining the project in much greater detail can be found in `BTP2-Thesis.pdf`. Unfortunately, it is unlikely this work will get published in its current state due to a lack of rigorous literature review on the exact behaviour of working memory. For example, the role of attentional mechanisms in WM are not addressed in the current model. It is unlikely that a model, however interesting it may be, attempting to explain three (relatively old) psychological phenomena, while ignoring the rest of the work done on the cognitive modeling side that is currently in literature. There are multiple avenues for future work:
+1. Complete circuit simulation of the current model including learning of NVM synapses (attractive from a neuromorphic perspective)
 2. More accurate/cutting-edge cognitive modeling (needs a large amount of literature review and ground-level work)
 
