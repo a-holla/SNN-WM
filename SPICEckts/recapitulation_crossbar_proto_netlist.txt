@@ -1,0 +1,123 @@
+* C:\Users\amodh\OneDrive\Desktop\working_memory notes\SPICEckts\Crossbar.asc
+I1 VDD N002 PULSE(10n 0 50u 1n 1n 450u)
+V1 VDD 0 1.8
+XX1 N002 N003 liftest
+R2 N001 N005 332
+R3 N004 N005 332
+R4 N001 N006 332
+R5 N004 N006 332
+R6 N001 N007 332
+R7 N004 N007 200
+XX2 N003 N004 N001 tempotroncircuit
+XX3 N009 N010 liftest
+R8 N008 N005 332
+R9 N011 N005 332
+R10 N008 N006 332
+R11 N011 N006 332
+R12 N008 N007 332
+R13 N011 N007 332
+XX4 N010 N011 N008 tempotroncircuit
+XX5 N013 N014 liftest
+R14 N012 N005 332
+R15 N015 N005 332
+R16 N012 N006 332
+R17 N015 N006 332
+R18 N012 N007 332
+R19 N015 N007 332
+XX6 N014 N015 N012 tempotroncircuit
+R20 N005 0 1p
+R21 N006 0 1p
+R22 N007 0 1p
+B1 VDD N016 I=I(R20)
+B2 VDD N017 I = I(R21)
+B3 VDD N018 I = I(R22)
+R23 VDD N016 1e11
+R24 VDD N017 1e11
+R25 VDD N018 1e11
+XX8 N017 N020 liftest
+XX9 N018 N021 liftest
+XX7 N016 N019 liftest
+I2 VDD N009 PULSE(5n 0 50u 1n 1n 450u)
+I3 VDD N013 0
+
+* block symbol definitions
+.subckt liftest Vmem Out
+C1 Vmem 0 0.5p
+I2 VDD N004 3µ
+V1 VDD 0 1.8
+R5 VDD N004 1e8
+R8 Vmem 0 33.33e6
+S2 0 Vmem N012 0 SW1
+S1 Vmem N004 VDD N003 SW1
+V2 N008 0 90m
+M1 VDD N007 N003 N006 PMOS
+M2 N003 N007 0 N009 NMOS
+S3 VC2 N005 VDD N003 SW1
+I3 VDD N005 20µ
+R1 VDD N005 1e8
+C2 VC2 0 50p
+R2 N011 0 69k
+A1 VC2 0 0 0 0 0 N012 0 SCHMITT Vhigh=1.8 Vt=100m Vh=60m Trise=1n Tfall=1n
+V5 VSS 0 -1.8
+XU1 Vmem N008 VDD VSS N007 TLV9032
+M3 VC2 N003 N011 N010 NMOS
+S4 N001 VDD VDD Vmem SW2
+S5 0 N001 Vmem 0 SW1
+S6 N002 VDD VDD N001 SW2
+S7 0 N002 N001 0 SW1
+S8 Out VDD VDD N002 SW2
+S9 0 Out N002 0 SW1
+.ic V(Vmem) = 0
+.model SW1 SW(Ron = 1u Roff = 1e18 Vt=0.2 Vh=0)
+.model SW2 SW(Ron = 1u Roff = 1e18 Vt = 1.6 Vh = 0)
+.ic V(VC2) = 0
+.ends liftest
+
+.subckt tempotroncircuit Vpre Vout Voutp
+M2 VDD Vprep N003 N005 PMOS
+M1 N003 Vpre VDD N001 NMOS
+V1 VDD 0 1.8
+M3 VS1 Vpre N003 N010 PMOS
+M4 N003 Vprep VS1 N009 NMOS
+V4 VS1 0 0.7
+C1 VDD VC1 4.2p
+V5 VS2 0 1.65
+V6 VS3 0 1.7
+S1 VS2 VC1 VC1 N003 SW1
+M6 VDD VS3 VC1 N002 CMOSP
+M5 VDD VC1 N011 N007 CMOSP l=130n w=1.2u
+V7 VSS 0 -1.8
+V8 VS1p 0 -0.7
+V9 VS3p 0 -1.7
+V10 VS2p 0 -1.65
+S2 VC2 VS2p VS2p N004 SW2
+C2 VSS VC2 28p
+S3 N004 VSS Vprep 0 SW1
+S4 VS1p N004 Vpre 0 SW1
+M8 VSS VS3p VC2 N006 CMOSN
+M7 VSS VC2 N011 N008 CMOSN l=130n w=200n
+C3 N011 0 1p
+M9 Vprep Vpre 0 0 NMOS
+M10 Vprep Vpre VDD VDD PMOS
+R1 N011 0 1e6
+XU1 N012 Vout VDD VSS Vout LT1001
+R2 N013 Vout 1k
+XU2 0 N013 VDD VSS Voutp level1 Avol=1Meg GBW=10Meg Vos=0 En=0 Enk=0 In=0 Ink=0 Rin=500Meg
+R3 N013 Voutp 1k
+V3 N012 N011 24.72µ
+.model SW1 SW(Ron = 1u Roff = 1e18 Vt=0.4 Vh=0)
+.ic V(VC1)=1.8
+.include ibm130.lib
+.ic V(VC2)=-1.8
+.model SW2 SW(Ron = 1u Roff = 1e18 Vt=0.1 Vh=0)
+.ends tempotroncircuit
+
+.model NMOS NMOS
+.model PMOS PMOS
+.lib C:\Users\amodh\OneDrive\Documents\LTspiceXVII\lib\cmp\standard.mos
+.tran 200u
+.lib C:\Users\amodh\OneDrive\Desktop\working_memory notes\SPICEckts\comparator\tlv9032.lib
+.lib LTC.lib
+.lib UniversalOpAmp1.lib
+.backanno
+.end
